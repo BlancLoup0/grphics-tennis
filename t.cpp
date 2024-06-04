@@ -227,6 +227,22 @@ int main()
             // Check collisions between the ball and the screen
             if (ball.getPosition().x - ballRadius < 0.f)
             {
+                // Increase the right player score and shrink the right paddle
+                rightPlayerScore++;
+                rightPaddle.setSize(rightPaddle.getSize() - sf::Vector2f(0, 10));
+                rightPaddle.setOrigin(paddleSize / 2.f);
+
+                // Reset the position of the paddles and the ball
+                leftPaddle.setPosition(10.f + paddleSize.x / 2.f, gameHeight / 2.f);
+                rightPaddle.setPosition(gameWidth - 10.f - paddleSize.x / 2.f, gameHeight / 2.f);
+                ball.setPosition(gameWidth / 2.f, gameHeight / 2.f);
+
+                // Reset the ball angle
+                do
+                {
+                    // Make sure the ball initial angle is not too much vertical
+                    ballAngle = static_cast<float>(std::rand() % 360) * 2.f * pi / 360.f;
+                } while (std::abs(std::cos(ballAngle)) < 0.7f);
                 rightPlayerScore++; // Increase right player score
                 ball.setPosition(gameWidth / 2.f, gameHeight / 2.f); // Reset ball position
                 // Check if game is over
@@ -235,10 +251,27 @@ int main()
                     // Game over, right player wins
                     isPlaying = false;
                     pauseMessage.setString("Right Player Wins!\n\nPress space to restart or escape to exit.");
+                    // Clear the vector of balls when the game is over
                 }
             }
             if (ball.getPosition().x + ballRadius > gameWidth)
             {
+                // Increase the right player score and shrink the right paddle
+                rightPlayerScore++;
+                rightPaddle.setSize(rightPaddle.getSize() - sf::Vector2f(0, 10));
+                rightPaddle.setOrigin(paddleSize / 2.f);
+
+                // Reset the position of the paddles and the ball
+                leftPaddle.setPosition(10.f + paddleSize.x / 2.f, gameHeight / 2.f);
+                rightPaddle.setPosition(gameWidth - 10.f - paddleSize.x / 2.f, gameHeight / 2.f);
+                ball.setPosition(gameWidth / 2.f, gameHeight / 2.f);
+
+                // Reset the ball angle
+                do
+                {
+                    // Make sure the ball initial angle is not too much vertical
+                    ballAngle = static_cast<float>(std::rand() % 360) * 2.f * pi / 360.f;
+                } while (std::abs(std::cos(ballAngle)) < 0.7f);
                 leftPlayerScore++; // Increase left player score
                 ball.setPosition(gameWidth / 2.f, gameHeight / 2.f); // Reset ball position
                 // Check if game is over
@@ -247,6 +280,7 @@ int main()
                     // Game over, left player wins
                     isPlaying = false;
                     pauseMessage.setString("Left Player Wins!\n\nPress space to restart or escape to exit.");
+                    // Clear the vector of balls when the game is over
                 }
             }
 
@@ -307,7 +341,11 @@ int main()
             // Draw the paddles and the ball
             window.draw(leftPaddle);
             window.draw(rightPaddle);
-            window.draw(ball);
+            // Draw the balls
+            for (const auto& ball : balls)
+            {
+                window.draw(ball);
+            }
             // Draw scores
             window.draw(leftScoreText);
             window.draw(rightScoreText);
